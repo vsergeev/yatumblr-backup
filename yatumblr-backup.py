@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 #
 # yet another tumblr backup script - vsergeev
-# Downloads blog info and all raw posts and writes them to a file in JSON.
+# Downloads blog info and all raw posts and writes them to a gzipped JSON file.
 #
 
 import sys
 import time
 import json
+import gzip
 
 if sys.version > "3":
     from urllib.request import urlopen
@@ -71,14 +72,14 @@ while len(backup['blog_posts']) < backup['blog_info']['posts']:
     offset = len(backup['blog_posts'])
     backup['blog_posts'] += tumblr_posts_info(blog, offset)
     sys.stdout.write("\rTotal posts fetched:   %d" % len(backup['blog_posts']))
+    sys.stdout.flush()
 
 print("\n\nDone!")
 
-timestr = time.strftime("%Y-%m-%d-%H-%M-%S")
-filename = "backup-{0}-{1}.json".format(blog, timestr)
+filename = "backup-{0}-{1}.json.gz".format(blog, time.strftime("%Y-%m-%d-%H-%M-%S"))
 
-with open(directory + filename, "w") as f:
-    f.write(json.dumps(backup, indent=4, sort_keys=True))
+with gzip.open(directory + filename, "w") as f:
+    f.write(json.dumps(backup, indent=4, sort_keys=True).encode("UTF-8"))
 
 print("Backup written to %s" % (directory + filename))
 
