@@ -23,4 +23,5 @@ $
 ### Notes
 
   * yatumblr-backup does not fetch images used in text or image posts.
+  * yatumblr-backup does not fetch blog static pages or stylesheets.
 
