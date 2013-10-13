@@ -36,7 +36,9 @@ def tumblr_api_get(url):
 
     try:
         if response['meta']['status'] != 200:
-            raise TumblrAPIException("invalid response code: %d" % response['meta']['status'])
+            raise TumblrAPIException("response error: %d" % response['meta']['status'])
+        elif 'response' not in response:
+            raise TumblrAPIException("response data missing")
     except KeyError:
         raise TumblrAPIException("invalid response")
 
@@ -79,7 +81,7 @@ print("\n\nDone!")
 filename = "backup-{0}-{1}.json.gz".format(blog, time.strftime("%Y-%m-%d-%H-%M-%S"))
 
 with gzip.open(directory + filename, "w") as f:
-    f.write(json.dumps(backup, indent=4, sort_keys=True).encode("UTF-8"))
+    f.write(json.dumps(backup, indent=4, sort_keys=True).encode("utf-8"))
 
 print("Backup written to %s" % (directory + filename))
 
